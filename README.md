@@ -19,10 +19,8 @@ Using this package consists of two steps:
 1. Add the `RemoteModel` trait to a model.
 2. Add a `$endpoint` property to the model.
 
-That's it.
-
 ```php
-class Project extends Model
+class Celebrity extends Model
 {
     use \RemoteModels\RemoteModel;
 
