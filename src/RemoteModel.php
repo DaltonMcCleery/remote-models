@@ -50,16 +50,28 @@ trait RemoteModel
 
     public function getEndpoint(): ?string
     {
-        if ($this->endpoint) {
-            $domain = config('remote-models.domain', '');
-            if (Str::endsWith($domain, '/')) {
-                $domain = \rtrim($domain, '/');
-            }
-
-            return $domain . $this->endpoint;
+        if (! $this->endpoint) {
+            $this->endpoint = Str::of($this::class)
+                ->afterLast('\\')
+                ->slug()
+                ->value();
         }
 
-        return null;
+        $domain = config('remote-models.domain', '');
+        if (Str::endsWith($domain, '/')) {
+            $domain = \rtrim($domain, '/');
+        }
+
+        $path = config('remote-models.api-path');
+        if (Str::endsWith($path, '/') && Str::startsWith($this->endpoint, '/')) {
+            $path = \rtrim($path, '/');
+        }
+
+        if (! Str::startsWith($path, '/')) {
+            $path = '/' . $path;
+        }
+
+        return $domain . $path . $this->endpoint;
     }
 
 	protected function remoteModelCachePath(): string
@@ -213,11 +225,6 @@ trait RemoteModel
 
     public function callRemoteModelEndpoint(int $page = 1): array
     {
-        // Load first result from endpoint
-        if (! $this->getEndpoint()) {
-            throw new \Exception('Remote Model property `$endpoint` cannot be empty.');
-        }
-
         $response = Http::timeout(10)->get($this->getEndpoint() . '?page=' . $page);
 
         if ($response->failed()) {

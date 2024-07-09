@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use RemoteModels\RemoteModel;
@@ -6,9 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
+beforeEach(function () {
+    Config::set('remote-models.domain', 'https://yourdomain.com/');
+});
+
 it('loads data via pagination', function () {
     Http::fake([
-        'yourdomain.com/api/celebrities*' => Http::sequence()
+        'yourdomain.com' . mockApiPath(endpoint: 'celebrity', withWildcard: true) => Http::sequence()
             // Initial schema call.
             ->push([
                 'total' => 2,
@@ -54,23 +59,23 @@ it('loads data via pagination', function () {
 });
 
 it('loads user from where query', function () {
-    Http::fake(mockDefaultHttpResponse());
+    Http::fake(mockDefaultHttpResponse(endpoint: 'celebrity', domain: 'yourdomain.com'));
 
     expect(Celebrity::where('name', 'Dwayne Johnson')->first()->id)->toBe(999)
         ->and(Celebrity::where('name', 'The Rock')->first())->toBeNull();
 });
 
-it('adds domain to config', function () {
-    Config::set('remote-models.domain', 'https://yourdomain.com/');
+it('changes domain in config', function () {
+    Config::set('remote-models.domain', 'https://mydomain.com/');
 
-    Http::fake(mockDefaultHttpResponse());
+    Http::fake(mockDefaultHttpResponse(endpoint: 'celebrity', domain: 'mydomain.com'));
 
-    expect(WithDomain::where('name', 'Dwayne Johnson')->first()->id)->toBe(999);
+    expect(Celebrity::where('name', 'Dwayne Johnson')->first()->id)->toBe(999);
 });
 
 it('loads user from plain API', function () {
     Http::fake([
-        'yourdomain.com/api/celebrities*' => Http::response([
+        'yourdomain.com' . mockApiPath(endpoint: 'celebrity', withWildcard: true) => Http::response([
             [
                 'id' => 999,
                 'name' => 'Dwayne Johnson',
@@ -82,13 +87,23 @@ it('loads user from plain API', function () {
         ->and(Celebrity::where('name', 'The Rock')->first())->toBeNull();
 });
 
-it('fails with no endpoint', function () {
-    expect(NoEndpoint::where('name', 'Dwayne Johnson')->first())->toBeNull();
-})->throws(\Exception::class, 'Remote Model property `$endpoint` cannot be empty.');
+it('explicitly adds endpoint', function () {
+    Http::fake([
+        'yourdomain.com' . mockApiPath(endpoint: 'custom-endpoint', withWildcard: true) => Http::response([
+            [
+                'id' => 999,
+                'name' => 'Dwayne Johnson',
+            ]
+        ]),
+    ]);
+
+    expect(WithEndpoint::where('name', 'Dwayne Johnson')->first()->id)->toBe(999)
+        ->and(WithEndpoint::where('name', 'The Rock')->first())->toBeNull();
+});
 
 it('fails on API call', function () {
     Http::fake([
-        'yourdomain.com/api/celebrities*' => Http::response(status: 500),
+        'yourdomain.com' . mockApiPath(endpoint: 'celebrity', withWildcard: true) => Http::response(status: 500),
     ]);
 
     expect(Celebrity::where('name', 'Dwayne Johnson')->first())->toBeNull();
@@ -96,7 +111,7 @@ it('fails on API call', function () {
 
 it('fails on empty API data', function () {
     Http::fake([
-        'yourdomain.com/api/celebrities*' => Http::response([
+        'yourdomain.com' . mockApiPath(endpoint: 'celebrity', withWildcard: true) => Http::response([
             'total' => 0,
             'per_page' => 15,
             'current_page' => 1,
@@ -109,7 +124,7 @@ it('fails on empty API data', function () {
 })->throws(\Exception::class, 'No data returned from Remote Model `$endpoint`.');
 
 it('uses memory if the cache directory is not writeable or not found', function () {
-    Http::fake(mockDefaultHttpResponse());
+    Http::fake(mockDefaultHttpResponse(endpoint: 'celebrity', domain: 'yourdomain.com'));
 
     config(['remote-models.cache-path' => $path = __DIR__ . '/non-existant-path']);
 
@@ -121,7 +136,7 @@ it('uses memory if the cache directory is not writeable or not found', function 
 });
 
 it('caches sqlite file if storage cache folder is available', function () {
-    Http::fake(mockDefaultHttpResponse());
+    Http::fake(mockDefaultHttpResponse(endpoint: 'celebrity', domain: 'yourdomain.com'));
 
     $count = Celebrity::count();
 
@@ -133,19 +148,12 @@ it('uses same cache between requests', function () {
     // TODO
 })->skip();
 
-
 class Celebrity extends Model {
     use RemoteModel;
-
-    protected $endpoint = 'https://yourdomain.com/api/celebrities';
 }
 
-class WithDomain extends Model {
+class WithEndpoint extends Model {
     use RemoteModel;
 
-    protected $endpoint = '/api/celebrities';
-}
-
-class NoEndpoint extends Model {
-    use RemoteModel;
+    protected string $endpoint = '/custom-endpoint';
 }
