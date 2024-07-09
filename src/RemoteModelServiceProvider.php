@@ -2,7 +2,6 @@
 
 namespace RemoteModels;
 
-use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -20,8 +19,6 @@ class RemoteModelServiceProvider extends ServiceProvider
                 __DIR__.'/config/remote-models.php' => config_path('remote-models.php'),
             ], 'config');
 		}
-
-		AboutCommand::add('Remote Models', 'Version', '0.1.0');
 	}
 
 	/**
