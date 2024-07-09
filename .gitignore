@@ -1,0 +1,15 @@
+build
+.phpunit.result.cache
+.DS_Store
+.php_cs.cache
+.vscode
+.idea
+.php-cs-fixer.cache
+auth.json
+vendor/
+*/**/vendor
+*/**/node_modules
+*/**/*-lock.json
+*/**/*.lock
+composer.lock
+tests/cache/

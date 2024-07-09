@@ -1,0 +1,59 @@
+{
+    "name": "daltonmccleery/remote-models",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Dalton McCleery",
+            "email": "daltonmccleery@gmail.com"
+        },
+        {
+            "name": "Caleb Porzio",
+            "email": "calebporzio@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": "^8.1",
+        "ext-pdo_sqlite": "*",
+        "ext-sqlite3": "*",
+        "guzzlehttp/guzzle": "^7.8",
+        "illuminate/database": "^9.0 || ^10.0 || ^11.0",
+        "illuminate/support": "^9.0 || ^10.0 || ^11.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.1",
+        "orchestra/testbench": "^7.0 || ^8.0 || ^9.0",
+        "pestphp/pest": "^2.30",
+        "pestphp/pest-plugin-faker": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "RemoteModels\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "RemoteModels\\RemoteModelsServiceProvider"
+            ]
+        }
+    }
+}
