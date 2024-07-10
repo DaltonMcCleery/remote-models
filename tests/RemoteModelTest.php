@@ -7,7 +7,8 @@ uses()->group('trait');
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Tests\Models\Celebrity;
-use Tests\Models\WithCustomEndpoint;
+use Tests\Models\CelebrityWithCustomEndpoint;
+use Tests\Models\CelebrityWithSchema;
 
 beforeEach(function () {
     Config::set('remote-models.domain', 'https://yourdomain.com/');
@@ -99,8 +100,75 @@ it('explicitly adds endpoint', function () {
         ]),
     ]);
 
-    expect(WithCustomEndpoint::where('name', 'Dwayne Johnson')->first()->id)->toBe(999)
-        ->and(WithCustomEndpoint::where('name', 'The Rock')->first())->toBeNull();
+    expect(CelebrityWithCustomEndpoint::where('name', 'Dwayne Johnson')->first()->id)->toBe(999)
+        ->and(CelebrityWithCustomEndpoint::where('name', 'The Rock')->first())->toBeNull();
+});
+
+it('correctly maps datetimes', function () {
+    Http::fake([
+        '*' . mockApiPath('/celebrity') => Http::response([
+            'total' => 1,
+            'per_page' => 15,
+            'current_page' => 1,
+            'last_page' => 1,
+            'data' => [
+                [
+                    'id' => 999,
+                    'name' => 'Dwayne Johnson',
+                    'birthday' => new \DateTime('1972-05-02')
+                ]
+            ]
+        ]),
+    ]);
+
+    expect(Celebrity::where('name', 'Dwayne Johnson')->first()->birthday)->toBe('1972-05-02 00:00:00');
+});
+
+it('has custom schema', function () {
+    Http::fake([
+        '*' . mockApiPath('/celebrity-with-schema') => Http::response([
+            'total' => 1,
+            'per_page' => 15,
+            'current_page' => 1,
+            'last_page' => 1,
+            'data' => [
+                [
+                    'id' => 999,
+                    'name' => 'Dwayne Johnson',
+                    'birthday' => '1972-05-02',
+                ]
+            ]
+        ]),
+    ]);
+
+    $celebrity = CelebrityWithSchema::find(999)->first();
+
+    expect($celebrity->name)->toBe('Dwayne Johnson')
+        ->and($celebrity->birthday)->toBe('1972-05-02 00:00:00');
+});
+
+it('ignores columns not in custom schema', function () {
+    Http::fake([
+        '*' . mockApiPath('/celebrity-with-schema') => Http::response([
+            'total' => 1,
+            'per_page' => 15,
+            'current_page' => 1,
+            'last_page' => 1,
+            'data' => [
+                [
+                    'id' => 999,
+                    'name' => 'Dwayne Johnson',
+                    'birthday' => '1972-05-02',
+                    'best_movie' => 'Jumanji'
+                ]
+            ]
+        ]),
+    ]);
+
+    $bestMovie = CelebrityWithSchema::where('name', 'Dwayne Johnson')->first()->best_movie;
+
+    expect($bestMovie)->toBeNull()
+        ->and($bestMovie)->not->toBe('Jumanji');
 });
 
 it('fails on API call', function () {

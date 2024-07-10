@@ -54,7 +54,24 @@ class Celebrity extends Model
 {
     use \RemoteModels\RemoteModel;
 
-    protected $endpoint = '/v1/celebrities';
+    protected $remoteEndpoint = '/v1/celebrities';
+}
+```
+
+### Custom Schema
+
+Remote Models will auto-discover the schema from the first API call, however, if you want more control over the schema or
+what fields are saved locally, you may add them to a `$schema` property with a type cast for the column.
+
+```php
+class Celebrity extends Model
+{
+    use \RemoteModels\RemoteModel;
+
+    protected $remoteSchema = [
+        'name' => 'string',
+        'birthday' => 'datetime' 
+    ];
 }
 ```
 
@@ -95,6 +112,5 @@ This package was _heavily_ inspired by Caleb Porzio's [Sushi](https://github.com
 ## Upcoming Features
 
 - Set and control caching times.
-- Custom schema for mapping columns.
 - Add command for pre-caching all Remote Models for deployment.
 - Add local database fallback
