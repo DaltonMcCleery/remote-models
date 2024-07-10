@@ -9,7 +9,7 @@ return [
 
     'api-path' => '/api/_remote-model',
 
-    'models' => [
-//        \App\Models\User::class,
+    'host_models' => [
+        // \App\Models\User::class,
     ],
 ];
