@@ -15,7 +15,7 @@ beforeEach(function () {
 
 it('loads data via pagination', function () {
     Http::fake([
-        'yourdomain.com' . mockApiPath(endpoint: '/celebrity') => Http::sequence()
+        '*' . mockApiPath(endpoint: '/celebrity') => Http::sequence()
             // Initial schema call.
             ->push([
                 'total' => 2,

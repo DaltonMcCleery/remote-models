@@ -51,7 +51,7 @@ trait RemoteModel
     public function getEndpoint(): ?string
     {
         if (! $this->endpoint) {
-            $this->endpoint = Str::of($this::class)
+            $this->endpoint = '/' . Str::of($this::class)
                 ->afterLast('\\')
                 ->slug()
                 ->value();
