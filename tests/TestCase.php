@@ -2,9 +2,11 @@
 
 namespace Tests;
 
-use RemoteModels\RemoteModelServiceProvider;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use RemoteModels\RemoteModelServiceProvider;
+use Tests\Models\Celebrity;
 
 abstract class TestCase extends OrchestraTestCase
 {
@@ -18,6 +20,11 @@ abstract class TestCase extends OrchestraTestCase
 			'database' => ':memory:',
 			'prefix'   => '',
 		]);
+
+        Config::set('remote-models.domain', 'https://yourdomain.com/');
+        Config::set('remote-models.models', [
+            Celebrity::class,
+        ]);
 	}
 
 	protected function defineDatabaseMigrations(): void

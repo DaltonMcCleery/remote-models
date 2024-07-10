@@ -41,15 +41,15 @@ uses(TestCase::class)->in('./');
 |
 */
 
-function mockApiPath(string $endpoint, bool $withWildcard = false): string
+function mockApiPath(string $endpoint): string
 {
-    return config('remote-models.api-path') . $endpoint . ($withWildcard ? '*' : '');
+    return config('remote-models.api-path') . $endpoint . '*';
 }
 
-function mockDefaultHttpResponse(string $endpoint, string $domain = ''): array
+function mockDefaultHttpResponse(string $endpoint, ?string $domain = null): array
 {
     return [
-        $domain . mockApiPath($endpoint, withWildcard: true) => Http::response([
+        ($domain ?? '*') . mockApiPath($endpoint) => Http::response([
             'total' => 1,
             'per_page' => 15,
             'current_page' => 1,
