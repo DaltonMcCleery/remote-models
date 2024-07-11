@@ -48,7 +48,7 @@ trait RemoteModel
         }
     }
 
-    public function getEndpoint(): ?string
+    public function getRemoteModelEndpoint(): ?string
     {
         if (! $this->remoteEndpoint) {
             $this->remoteEndpoint = '/' . Str::of($this::class)
@@ -74,7 +74,7 @@ trait RemoteModel
         return $domain . $path . $this->remoteEndpoint;
     }
 
-    public function getSchema(): array
+    public function getRemoteModelSchema(): array
     {
         return $this->remoteSchema ?? [];
     }
@@ -148,7 +148,7 @@ trait RemoteModel
 
         try {
             $schemaBuilder->create($this->getTable(), function (BluePrint $table) {
-                $schema = $this->getSchema();
+                $schema = $this->getRemoteModelSchema();
 
                 // If no schema given, load initial data from endpoint to gather columns.
                 if (\count($schema) === 0) {
@@ -264,7 +264,7 @@ trait RemoteModel
 
     public function callRemoteModelEndpoint(int $page = 1): array
     {
-        $response = Http::timeout(10)->post($this->getEndpoint() . '?page=' . $page);
+        $response = Http::timeout(10)->post($this->getRemoteModelEndpoint() . '?page=' . $page);
 
         if ($response->failed()) {
             throw new \Exception('Access to Remote Model `$endpoint` failed.');
@@ -275,7 +275,7 @@ trait RemoteModel
 
     private function insertRemoteModelData(array $data, int $chunk = 15): void
     {
-        $schema = $this->getSchema();
+        $schema = $this->getRemoteModelSchema();
         $checkSchema = \count($schema) > 0;
 
         foreach (\array_chunk($data, $chunk) ?? [] as $inserts) {
