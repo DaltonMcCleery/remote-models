@@ -5,6 +5,9 @@ Example use case.
 It is important to note that this package is recommended to be installed on both the "host" application, the one that actually
 holds the original Model and its data, and the "remote" application, the one that needs to reuse/share that Model's data.
 
+- [Standard Implementation](#standard-implementation)
+- [Custom Schema](#custom-schema-implementation)
+
 ---
 
 ## Standard Implementation
