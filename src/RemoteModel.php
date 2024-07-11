@@ -87,15 +87,21 @@ trait RemoteModel
 		]);
 	}
 
-	protected function remoteModelCacheFileName(): string
+    protected function remoteModelCacheFileName(): string
     {
-		return config('remote-models.cache-prefix', 'remote').'-'.Str::kebab(\str_replace('\\', '', static::class)).'.sqlite';
-	}
+        $filename = Str::of(static::class)
+            ->replace('\\', '')
+            ->kebab()
+            ->replace('app-models', 'model')
+            ->value();
 
-	protected function remoteModelCacheDirectory(): false|string
+        return config('remote-models.cache-prefix', 'remote') . '-' . $filename . '.sqlite';
+    }
+
+    protected function remoteModelCacheDirectory(): false|string
     {
-		return realpath(config('remote-models.cache-path', storage_path('framework/cache')));
-	}
+        return realpath(config('remote-models.cache-path') ?? storage_path('framework/cache'));
+    }
 
     protected function remoteModelCacheReferencePath(): false|string
     {
