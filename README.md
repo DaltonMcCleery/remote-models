@@ -2,7 +2,7 @@
 
 Sometimes you want to use Eloquent, but that data is in another database on a different application.
 
-This package is used for both the "host" application and the "remote" application. Both use cases are detailed below or 
+This package is used for both the "host" application and the "remote" application. Both use cases are detailed below, or 
 you can look at [this example](EXAMPLE.md).
 
 ## Requirements
@@ -94,7 +94,10 @@ If you do not install this package on the "host" application, a custom endpoint 
 you plan on using. You can use the following as an example:
 
 ```php
-Route::post(config('remote-models.api-path') . '/v1/celebrities', fn () => Celebrity::paginate());
+Route::post(
+    config('remote-models.api-path') . '/v1/celebrities',
+    fn (\RemoteModels\Http\Requests\CustomRemoteModelRequest $request) => $request->returnRemoteModels(Celebrity::class)
+);
 ```
 
 You are not required to install this package on the "host" application. If you don't, you will need to set up your own API
