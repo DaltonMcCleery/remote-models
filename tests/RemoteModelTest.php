@@ -177,7 +177,7 @@ it('fails on API call', function () {
     ]);
 
     expect(Celebrity::where('name', 'Dwayne Johnson')->first())->toBeNull();
-})->throws(\Exception::class, 'Access to Remote Model `$endpoint` failed.');
+})->throws(\Exception::class, 'Access to Remote Model `$remoteEndpoint` failed.');
 
 it('fails on empty API data', function () {
     Http::fake([
@@ -191,7 +191,7 @@ it('fails on empty API data', function () {
     ]);
 
     expect(Celebrity::where('name', 'Dwayne Johnson')->first())->toBeNull();
-})->throws(\Exception::class, 'No data returned from Remote Model `$endpoint`.');
+})->throws(\Exception::class, 'No data returned from Remote Model `$remoteEndpoint`.');
 
 it('uses memory if the cache directory is not writeable or not found', function () {
     Http::fake(mockDefaultHttpResponse());

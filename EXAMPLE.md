@@ -14,6 +14,10 @@ holds the original Model and its data, and the "remote" application, the one tha
 
 ### Host
 
+```env
+REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
+```
+
 ```php
 // config/remote-models.php
 return [
@@ -40,6 +44,10 @@ class Celebrity extends Model
 
 ### Remote
 
+```env
+REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
+```
+
 ```php
 // config/remote-models.php
 return [
@@ -63,6 +71,10 @@ class Celebrity extends Model
 ## Custom Schema Implementation
 
 ### Host
+
+```env
+REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
+```
 
 ```php
 // config/remote-models.php
@@ -90,6 +102,10 @@ class Celebrity extends Model
 ```
 
 ### Remote
+
+```env
+REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
+```
 
 ```php
 // config/remote-models.php

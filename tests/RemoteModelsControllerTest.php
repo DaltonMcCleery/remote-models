@@ -18,15 +18,27 @@ it('does not register api endpoint with no models in config', function () {
     ->skip('Have to set models config in TestCase for others to work...');
 
 it('fails without giving a model class', function () {
-    $response = post(route('remote-models.endpoint'));
+    $response = post(route('remote-models.endpoint'), [
+        'api_key' => config('remote-models.api-key'),
+    ]);
 
     expect($response->getStatusCode())->toBe(302)
         ->and($response->exception->getMessage())->toBe('The model field is required.');
 });
 
+it('fails without giving an api key', function () {
+    $response = post(route('remote-models.endpoint'), [
+        'model' => Celebrity::class,
+    ]);
+
+    expect($response->getStatusCode())->toBe(302)
+        ->and($response->exception->getMessage())->toBe('The api key field is required.');
+});
+
 it('throws 404 on model not in config', function () {
     $response = post(route('remote-models.endpoint'), [
-        'model' => '\\App\\Models\\NonExistent'
+        'model' => '\\App\\Models\\NonExistent',
+        'api_key' => config('remote-models.api-key'),
     ]);
 
     expect($response->getStatusCode())->toBe(404);
@@ -41,7 +53,8 @@ it('calls api controller', function () {
     Http::fake(mockDefaultHttpResponse());
 
     $response = post(route('remote-models.endpoint'), [
-        'model' => Celebrity::class
+        'model' => Celebrity::class,
+        'api_key' => config('remote-models.api-key'),
     ]);
 
     expect($response->getStatusCode())->toBe(200)
@@ -122,7 +135,8 @@ it('calls api controller with pagination', function () {
 
     // Call the API to return paginated results, i.e. the first 15 people.
     $response = post(route('remote-models.endpoint'), [
-        'model' => Celebrity::class
+        'model' => Celebrity::class,
+        'api_key' => config('remote-models.api-key'),
     ]);
 
     expect($response->getStatusCode())->toBe(200)
@@ -141,7 +155,8 @@ it('calls api controller with pagination', function () {
 
     // Call next page of data.
     $response = post(route('remote-models.endpoint') . '?page=2', [
-        'model' => Celebrity::class
+        'model' => Celebrity::class,
+        'api_key' => config('remote-models.api-key'),
     ]);
 
     expect($response->getStatusCode())->toBe(200)

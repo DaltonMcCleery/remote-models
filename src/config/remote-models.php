@@ -7,7 +7,9 @@ return [
 
     'cache-prefix' => 'remote',
 
-    'api-path' => '/api/_remote-model',
+    'api-path' => '/api/_remote/_models',
+
+    'api-key' => env('REMOTE_MODELS_API_KEY', null),
 
     'host_models' => [
         // \App\Models\User::class,

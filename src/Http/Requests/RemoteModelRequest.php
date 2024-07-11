@@ -16,11 +16,16 @@ class RemoteModelRequest extends FormRequest
     {
         return [
             'model' => ['required', 'string', 'max:255'],
+            'api_key' => ['required', 'string', 'max:255'],
         ];
     }
 
     public function returnRemoteModels(): JsonResponse
     {
+        if ($this->api_key !== config('remote-models.api-key')) {
+            return response()->json(status: 403);
+        }
+
         if (\in_array($this->model, config('remote-models.host_models'))) {
             return response()->json((new $this->model())::paginate());
         }

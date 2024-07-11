@@ -165,7 +165,7 @@ trait RemoteModel
                 // If no custom schema was found
                 // and the API did not return any values to build a schema with...
                 if (\count($schema) === 0) {
-                    throw new \Exception('No data returned from Remote Model `$endpoint`.');
+                    throw new \Exception('No data returned from Remote Model `$remoteEndpoint`.');
                 }
 
                 $table->id();
@@ -263,10 +263,11 @@ trait RemoteModel
     {
         $response = Http::timeout(10)->post($this->getRemoteModelEndpoint() . '?page=' . $page, [
             'model' => static::class,
+            'api_key' => config('remote-models.api-key'),
         ]);
 
         if ($response->failed()) {
-            throw new \Exception('Access to Remote Model `$endpoint` failed.');
+            throw new \Exception('Access to Remote Model `$remoteEndpoint` failed.');
         }
 
         return $response->json();
