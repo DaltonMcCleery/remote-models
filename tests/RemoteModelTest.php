@@ -102,7 +102,7 @@ it('explicitly adds endpoint', function () {
 
     expect(CelebrityWithCustomEndpoint::where('name', 'Dwayne Johnson')->first()->id)->toBe(999)
         ->and(CelebrityWithCustomEndpoint::where('name', 'The Rock')->first())->toBeNull();
-})->only();
+});
 
 it('correctly maps datetimes', function () {
     Http::fake([
