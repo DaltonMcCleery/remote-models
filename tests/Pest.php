@@ -41,12 +41,12 @@ uses(TestCase::class)->in('./');
 |
 */
 
-function mockApiPath(string $endpoint): string
+function mockApiPath(string $endpoint = ''): string
 {
-    return config('remote-models.api-path') . $endpoint . '*';
+    return config('remote-models.api-path') . ($endpoint ?? '') . '*';
 }
 
-function mockDefaultHttpResponse(string $endpoint, ?string $domain = null): array
+function mockDefaultHttpResponse(string $endpoint = '', ?string $domain = null): array
 {
     return [
         ($domain ?? '*') . mockApiPath($endpoint) => Http::response([

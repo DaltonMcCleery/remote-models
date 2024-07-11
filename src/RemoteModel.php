@@ -51,10 +51,7 @@ trait RemoteModel
     public function getRemoteModelEndpoint(): ?string
     {
         if (! $this->remoteEndpoint) {
-            $this->remoteEndpoint = '/' . Str::of($this::class)
-                ->afterLast('\\')
-                ->kebab()
-                ->value();
+            $this->remoteEndpoint = '';
         }
 
         $domain = config('remote-models.domain', '');
@@ -264,7 +261,9 @@ trait RemoteModel
 
     public function callRemoteModelEndpoint(int $page = 1): array
     {
-        $response = Http::timeout(10)->post($this->getRemoteModelEndpoint() . '?page=' . $page);
+        $response = Http::timeout(10)->post($this->getRemoteModelEndpoint() . '?page=' . $page, [
+            'model' => static::class,
+        ]);
 
         if ($response->failed()) {
             throw new \Exception('Access to Remote Model `$endpoint` failed.');
