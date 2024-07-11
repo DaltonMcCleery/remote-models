@@ -2,7 +2,8 @@
 
 Sometimes you want to use Eloquent, but that data is in another database on a different application.
 
-This package is used for both the "host" application and the "remote" application. Both use cases are detailed below.
+This package is used for both the "host" application and the "remote" application. Both use cases are detailed below or 
+you can look at [this example](EXAMPLE.md).
 
 ## Requirements
 
@@ -100,6 +101,7 @@ You are not required to install this package on the "host" application. If you d
 endpoints for the models you wish to use. It is recommended to use Laravel's default [pagination](https://laravel.com/docs/11.x/pagination#paginating-eloquent-results).
 
 ## How It Works
+
 When a Model is called, it will make an API call to the either a custom endpoint or to a predefined endpoint using the Model's
 name. This predefined API endpoint can be configured in the config file.
 
