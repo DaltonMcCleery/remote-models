@@ -3,7 +3,7 @@
 Sometimes you want to use Eloquent, but that data is in another database on a different application.
 
 This package is used for both the "host" application and the "remote" application. Both use cases are detailed below, or 
-you can look at [this example](EXAMPLE.md).
+you can look at [these examples](EXAMPLES.md).
 
 ## Requirements
 
