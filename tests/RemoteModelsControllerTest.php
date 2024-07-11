@@ -6,6 +6,7 @@ uses()->group('controller');
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 use Tests\Models\Celebrity;
 use function Pest\Laravel\{post};
 
@@ -33,6 +34,15 @@ it('fails without giving an api key', function () {
 
     expect($response->getStatusCode())->toBe(302)
         ->and($response->exception->getMessage())->toBe('The api key field is required.');
+});
+
+it('fails with non-matching api key', function () {
+    $response = post(route('remote-models.endpoint'), [
+        'model' => Celebrity::class,
+        'api_key' => Str::reverse(config('remote-models.api-key')),
+    ]);
+
+    expect($response->getStatusCode())->toBe(403);
 });
 
 it('throws 404 on model not in config', function () {
