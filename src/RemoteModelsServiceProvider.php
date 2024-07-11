@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 /**
- * Class RemoteModelServiceProvider.
+ * Class RemoteModelsServiceProvider.
  */
-class RemoteModelServiceProvider extends ServiceProvider
+class RemoteModelsServiceProvider extends ServiceProvider
 {
 	/**
 	 * Bootstrap the application services.
