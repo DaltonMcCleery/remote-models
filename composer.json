@@ -7,10 +7,6 @@
             "name": "Dalton McCleery",
             "email": "daltonmccleery@gmail.com",
             "homepage": "https://daltonmccleery.com"
-        },
-        {
-            "name": "Caleb Porzio",
-            "email": "calebporzio@gmail.com"
         }
     ],
     "minimum-stability": "dev",
