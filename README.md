@@ -90,14 +90,20 @@ install this package on the host application as well and enter the "remote" mode
 
 ### Custom Endpoint
 
-If you do not install this package on the "host" application, a custom endpoint will need to be set up for each Remote Model
-you plan on using. You can use the following as an example:
+If you use a custom endpoint on the remote application, you will need to set up that custom route. You can use the following as an example:
 
 ```php
 Route::post(
     config('remote-models.api-path') . '/v1/celebrities',
     fn (\RemoteModels\Http\Requests\CustomRemoteModelRequest $request) => $request->returnRemoteModels(Celebrity::class)
 );
+```
+
+If you do **not** install this package on the "host" application, a custom endpoint will need to be set up for each Remote Model
+you plan on using. You will also need to manually validate the given API Key. You can use the following as an example:
+
+```php
+Route::post('/api/_remote/_models/v1/celebrities', fn () => response()->json(Celebrity::paginate())));
 ```
 
 You are not required to install this package on the "host" application. If you don't, you will need to set up your own API
