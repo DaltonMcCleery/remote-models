@@ -1,7 +1,14 @@
 {
     "name": "daltonmccleery/remote-models",
+    "description": "Sometimes you want to use Eloquent, but that data is in another database on a different application.",
     "license": "MIT",
     "type": "library",
+    "keywords": [
+        "laravel",
+        "eloquent",
+        "remote models",
+        "remote api"
+    ],
     "authors": [
         {
             "name": "Dalton McCleery",
