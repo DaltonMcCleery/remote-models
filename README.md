@@ -116,12 +116,7 @@ You can set how long to cache the remote data for using the `cache-ttl` config o
 
 ```php
 // config/remote-models.php
-'cache-ttl' => '1m' // 1 month
-'cache-ttl' => '1w' // 1 week
-'cache-ttl' => '1d' // 1 day
-'cache-ttl' => '1h' // 1 hour
-'cache-ttl' => '1i' // 1 minute
-'cache-ttl' => null // default
+'cache-ttl' => '1m | 1w | 1d | 1h' // 1 month | 1 week | 1 day | 1 hour
 ```
 
 ## External Host Data
