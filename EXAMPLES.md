@@ -22,7 +22,7 @@ REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
 ```php
 // config/remote-models.php
 return [
-    'host_models' => [
+    'host-models' => [
         \App\Models\Celebrity::class,
     ],
 ];
@@ -81,7 +81,7 @@ REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
 ```php
 // config/remote-models.php
 return [
-    'host_models' => [
+    'host-models' => [
         \App\Models\Celebrity::class,
     ],
 ];
@@ -147,7 +147,7 @@ REMOTE_MODELS_API_KEY="abcdefghijklmnopqrstuvwxyz"
 ```php
 // config/remote-models.php
 return [
-    'host_models' => [
+    'host-models' => [
         // Nothing, you shouldn't put anything here for a Model with a custom endpoint.
         // Otherwise, it will auto-create an API route.
     ],

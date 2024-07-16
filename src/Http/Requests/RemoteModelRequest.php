@@ -26,7 +26,7 @@ class RemoteModelRequest extends FormRequest
             return response()->json(status: 403);
         }
 
-        if (\in_array($this->model, config('remote-models.host_models'))) {
+        if (\in_array($this->model, config('remote-models.host-models'))) {
             return response()->json((new $this->model())::paginate());
         }
 

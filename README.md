@@ -83,7 +83,7 @@ install this package on the host application as well and enter the "remote" mode
 
 ```php
 // config/remote-models.php
-'host_models' => [
+'host-models' => [
     \App\Models\Celebrity::class
 ]
 ```

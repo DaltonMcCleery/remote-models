@@ -23,7 +23,7 @@ abstract class TestCase extends OrchestraTestCase
 
         Config::set('remote-models.domain', 'https://yourdomain.com/');
         Config::set('remote-models.api-key', 'abcdefghijklmnopqrstuvwxyz');
-        Config::set('remote-models.host_models', [
+        Config::set('remote-models.host-models', [
             Celebrity::class,
         ]);
 	}

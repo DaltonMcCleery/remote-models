@@ -13,7 +13,7 @@ return [
 
     'api-key' => env('REMOTE_MODELS_API_KEY', null),
 
-    'host_models' => [
+    'host-models' => [
         // \App\Models\User::class,
     ],
 ];

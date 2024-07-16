@@ -11,7 +11,7 @@ use Tests\Models\Celebrity;
 use function Pest\Laravel\{post};
 
 it('does not register api endpoint with no models in config', function () {
-    Config::set('remote-models.host_models', []);
+    Config::set('remote-models.host-models', []);
 
     $routeDoesntExist = route('remote-models.endpoint', ['model' => Celebrity::class]);
 })
