@@ -13,6 +13,10 @@ return [
 
     'api-key' => env('REMOTE_MODELS_API_KEY', null),
 
+    'remote-models-namespaces' => [
+        'App\\Models'
+    ],
+
     'host-models' => [
         // \App\Models\User::class,
     ],
