@@ -124,6 +124,53 @@ You can set how long to cache the remote data for using the `cache-ttl` config o
 'cache-ttl' => null // default
 ```
 
+## External Host Data
+
+There may be instances where you do not control the "host" application, i.e. it could be a Google Spreadsheet or a 3rd 
+party API, but would still like a way to query that data using Eloquent. 
+
+You'll need to have your Model implement the `RemoteModelInterface` and include the base `RemoteModelManagement` trait.
+This will have you implement 2 methods for setting up a custom schema (optional) and recursively fetching the data. In this instance, 
+the `$remoteEndpoint` is optional.
+
+You can create your own Remote Model by following this example:
+
+```php
+class Celebrity extends Model implements \RemoteModels\Interfaces\RemoteModelInterface
+{
+    use \RemoteModels\RemoteModelManagement;
+
+    public function migrate(): void
+    {
+        $this->createRemoteModelTable(schemaCallback: function (array $schema) {
+        
+            // Make any modifications to the column schema before the sqlite table is created.
+
+            return $schema;
+        });
+
+        $this->loadRemoteModelData();
+    }
+    
+    public function loadRemoteModelData(int $page = 1): void
+    {
+        // Normal operation is a POST request with the config API key,
+        // but you are free to modify the API call as you like.
+        $response = \Illuminate\Support\Facades\Http::get($this->getRemoteModelEndpoint());
+        
+        $data = $response->json();
+
+        // `insertRemoteModelData` is available and takes an array of data to be inserted.
+        $this->insertRemoteModelData($data['data'], $data['per_page'] ?? 15);
+
+        // Call the next page, if available.
+        if ((int) $data['current_page'] < (int) $data['last_page']) {
+            $this->loadRemoteModelData((int) $data['current_page'] + 1);
+        }
+    }
+}
+```
+
 ## How It Works
 
 When a Model is called, it will make an API call to the either a custom endpoint or to a predefined endpoint using the Model's
