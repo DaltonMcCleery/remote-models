@@ -34,6 +34,7 @@ trait RemoteModel
         ];
 
         switch (true) {
+            case \file_exists($cachePath) && config('remote-models.cache-ttl') && cache()->missing($instance->remoteModelCacheFileName()):
             case \file_exists($cachePath) && \filemtime($dataPath) <= \filemtime($cachePath):
                 $states['cache-file-found-and-up-to-date']();
                 break;
@@ -84,7 +85,7 @@ trait RemoteModel
 		]);
 	}
 
-    protected function remoteModelCacheFileName(): string
+    public function remoteModelCacheFileName(): string
     {
         $filename = Str::of(static::class)
             ->replace('\\', '')
@@ -113,7 +114,12 @@ trait RemoteModel
 
 		$instance->migrate();
 
-		\touch($cachePath, \filemtime($dataPath));
+        if (config('remote-models.cache-ttl')) {
+            $ttl = now()->add(config('remote-models.cache-ttl'));
+            cache()->remember($instance->remoteModelCacheFileName(), $ttl, fn () => $ttl);
+        } else {
+            \touch($cachePath, \filemtime($dataPath));
+        }
 	}
 
     public static function resolveConnection($connection = null)

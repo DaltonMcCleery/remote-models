@@ -124,6 +124,22 @@ it('correctly maps datetimes', function () {
     expect(Celebrity::where('name', 'Dwayne Johnson')->first()->birthday)->toBe('1972-05-02 00:00:00');
 });
 
+it('sets custom cache ttl', function () {
+    Config::set('remote-models.cache-ttl', '1d');
+
+    Http::fake(mockDefaultHttpResponse());
+
+    expect(Celebrity::where('name', 'Dwayne Johnson')->first()->id)->toBe(999);
+
+    // Should have cached
+    $cacheName = (new Celebrity())->remoteModelCacheFileName();
+    expect(cache()->get($cacheName))->not->toBeNull();
+
+    // Time travel to invalidate cache.
+    $this->travel(1)->days();
+    expect(cache()->get($cacheName))->toBeNull();
+});
+
 it('has custom schema', function () {
     Http::fake([
         '*' . mockApiPath() => Http::response([

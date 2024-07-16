@@ -109,6 +109,21 @@ Route::post('/api/_remote/_models/v1/celebrities', fn () => response()->json(Cel
 You are not required to install this package on the "host" application. If you don't, you will need to set up your own API
 endpoints for the models you wish to use. It is recommended to use Laravel's default [pagination](https://laravel.com/docs/11.x/pagination#paginating-eloquent-results).
 
+## Cache Interval
+
+You can set how long to cache the remote data for using the `cache-ttl` config option. These values follow the standard 
+[DateTime Interval](https://www.php.net/manual/en/class.dateinterval.php properties. Below are a few examples:
+
+```php
+// config/remote-models.php
+'cache-ttl' => '1m' // 1 month
+'cache-ttl' => '1w' // 1 week
+'cache-ttl' => '1d' // 1 day
+'cache-ttl' => '1h' // 1 hour
+'cache-ttl' => '1i' // 1 minute
+'cache-ttl' => null // default
+```
+
 ## How It Works
 
 When a Model is called, it will make an API call to the either a custom endpoint or to a predefined endpoint using the Model's
@@ -122,6 +137,6 @@ This package was _heavily_ inspired by Caleb Porzio's [Sushi](https://github.com
 
 ## Upcoming Features
 
-- Set and control caching times.
 - Add command for pre-caching all Remote Models for deployment.
 - Add local database fallback
+- Add support for other data sources (Spreadsheets, external APIs, etc)
