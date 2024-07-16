@@ -23,7 +23,7 @@ class RemoteModelsServiceProvider extends ServiceProvider
 		}
 
         $this->app->booted(function () use ($router) {
-            if (count(config('remote-models.host_models', [])) > 0) {
+            if (count(config('remote-models.host-models', [])) > 0) {
                 Route::group([
                     'namespace' => 'RemoteModels\Http\Controllers',
                 ], fn () => $this->loadRoutesFrom(__DIR__ . '/Http/routes.php'));
