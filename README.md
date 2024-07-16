@@ -119,6 +119,29 @@ You can set how long to cache the remote data for using the `cache-ttl` config o
 'cache-ttl' => '1m | 1w | 1d | 1h' // 1 month | 1 week | 1 day | 1 hour
 ```
 
+## Pre-cache Remote Models for Deployment
+
+Assuming your Remote Models are placed within the `App\Models\` namespace, you can "pre-cache" them so all of their data is 
+loaded upfront and on deployment instead of upon the first query. This can have a performance boost on large datasets.
+
+If you multiple directories of Remote Models or an unconventional directory structure, you can modify the config for this
+package to search for Remote Models in multiple directories.
+
+```php
+'remote-models-namespace' => [
+    'App\\Models',
+    
+    // Example: App Module with a Remote Team Model.
+    'AppModules\\Teams\\Models'
+],
+```
+
+Feel free to add this to your deployment script:
+
+```console
+php artisan remote-models:cache
+```
+
 ## External Host Data
 
 There may be instances where you do not control the "host" application, i.e. it could be a Google Spreadsheet or a 3rd 
@@ -179,6 +202,4 @@ This package was _heavily_ inspired by Caleb Porzio's [Sushi](https://github.com
 
 ## Upcoming Features
 
-- Add command for pre-caching all Remote Models for deployment.
-- Add local database fallback
-- Add support for other data sources (Spreadsheets, external APIs, etc)
+- Add local database fallback(?)

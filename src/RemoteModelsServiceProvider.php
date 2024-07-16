@@ -5,6 +5,7 @@ namespace RemoteModels;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use RemoteModels\Console\Commands\RemoteModelsCacheCommand;
 
 /**
  * Class RemoteModelsServiceProvider.
@@ -20,6 +21,10 @@ class RemoteModelsServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/config/remote-models.php' => config_path('remote-models.php'),
             ], 'config');
+
+            $this->commands([
+                RemoteModelsCacheCommand::class
+            ]);
 		}
 
         $this->app->booted(function () use ($router) {
