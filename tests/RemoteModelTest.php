@@ -7,6 +7,7 @@ uses()->group('trait');
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Tests\Models\Celebrity;
+use Tests\Models\CelebrityCustomModel;
 use Tests\Models\CelebrityWithCustomEndpoint;
 use Tests\Models\CelebrityWithSchema;
 
@@ -233,3 +234,16 @@ it('caches sqlite file if storage cache folder is available', function () {
 it('uses same cache between requests', function () {
     // TODO
 })->skip();
+
+it('loads data from a custom remote model setup', function () {
+    Http::fake([
+        '*' => Http::response([
+            [
+                'id' => 999,
+                'name' => 'Dwayne Johnson',
+            ]
+        ]),
+    ]);
+
+    expect(CelebrityCustomModel::where('name', 'Dwayne Johnson')->first()->id)->toBe(999);
+});
