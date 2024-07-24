@@ -255,7 +255,7 @@ trait RemoteModelManagement
                             switch (true) {
                                 case \is_array($value) && \array_key_exists('date', $value):
                                     return new \DateTime($value['date'], \array_key_exists('timezone', $value) ? new \DateTimeZone($value['timezone']) : null);
-                                case \strtotime($value) !== false:
+                                case ! \is_array($value) && \strtotime($value) !== false:
                                     return new \DateTime($value);
                                 default:
                                     return $value;
