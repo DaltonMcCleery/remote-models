@@ -194,7 +194,7 @@ trait RemoteModelManagement
                     ->toArray();
 
                 foreach ($schema as $column => $value) {
-                    if (\gettype($column) !== 'integer') {
+                    if (\count($this->getRemoteModelSchema()) === 0) {
                         // Custom schema not provided, resolve the type by the API value given.
                         $type = $this->resolveRemoteModelColumnType($value);
                     } else {
