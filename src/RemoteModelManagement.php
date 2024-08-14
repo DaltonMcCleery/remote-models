@@ -15,6 +15,12 @@ trait RemoteModelManagement
     {
         $instance = (new static);
 
+        // If the env is a "testing" environment  and the model has a factory,
+        // we don't want to call the remote API. Instead, we'll use the testing factory.
+        if (\in_array(config('app.env', 'local'), ['testing', 'workbench']) && \method_exists($instance, 'factory')) {
+            return;
+        }
+
         $cachePath = $instance->remoteModelCachePath();
         $dataPath = $instance->remoteModelCacheReferencePath();
 
