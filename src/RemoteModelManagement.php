@@ -15,9 +15,9 @@ trait RemoteModelManagement
     {
         $instance = (new static);
 
-        // If the env is a "testing" environment  and the model has a factory,
-        // we don't want to call the remote API. Instead, we'll use the testing factory.
-        if (\in_array(config('app.env', 'local'), ['testing', 'workbench']) && \method_exists($instance, 'factory')) {
+        if ($instance->isInTestingMode()) {
+            // Bypass caching and use in-memory database for testing.
+            static::setSqliteConnection(':memory:');
             return;
         }
 
@@ -108,7 +108,10 @@ trait RemoteModelManagement
 
     public static function resolveConnection($connection = null)
     {
-        return static::$remoteModelConnection;
+        // If in testing, fallback null to pick up on the default connection.
+        return (new static)->isInTestingMode()
+            ? static::$resolver->connection(null)
+            : static::$remoteModelConnection;
     }
 
     protected static function setSqliteConnection($database): void
@@ -123,9 +126,12 @@ trait RemoteModelManagement
         app('config')->set('database.connections.'.static::class, $config);
     }
 
-    public function getConnectionName(): string
+    public function getConnectionName(): ?string
     {
-        return static::class;
+        // If in testing, fallback null to pick up on the default connection.
+        return $this->isInTestingMode()
+            ? null
+            : static::class;
     }
 
     protected function resolveRemoteModelColumnType(mixed $value): string
@@ -275,5 +281,20 @@ trait RemoteModelManagement
                 );
             }
         }
+    }
+
+    /**
+     * If the env is a "testing" environment  and the model has a factory,
+     * we don't want to call the remote API. Instead, we'll use the testing factory.
+     *
+     * @return bool
+     */
+    private function isInTestingMode(): bool
+    {
+        if (\in_array(config('app.env', 'local'), ['testing', 'workbench'])) {
+            return \method_exists($this, 'factory');
+        }
+
+        return false;
     }
 }
