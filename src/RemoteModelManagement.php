@@ -5,6 +5,7 @@ namespace RemoteModels;
 use Illuminate\Database\Connectors\ConnectionFactory;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 trait RemoteModelManagement
@@ -293,6 +294,18 @@ trait RemoteModelManagement
     {
         if (\in_array(config('app.env', 'local'), ['testing', 'workbench'])) {
             return \method_exists($this, 'factory');
+        }
+
+        return false;
+    }
+
+    public static function clearRemoteCache(): string
+    {
+        $cache = (new static)->remoteModelCachePath();
+        if (File::exists($cache)) {
+            File::delete($cache);
+
+            return true;
         }
 
         return false;

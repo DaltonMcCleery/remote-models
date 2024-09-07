@@ -181,4 +181,3 @@ This package was _heavily_ inspired by Caleb Porzio's [Sushi](https://github.com
 
 - Add command for pre-caching all Remote Models for deployment.
 - Add local database fallback
-- Add support for other data sources (Spreadsheets, external APIs, etc)
